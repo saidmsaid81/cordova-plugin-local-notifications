@@ -39,6 +39,7 @@ import de.appplant.cordova.plugin.notification.Request;
 
 import static android.content.Intent.ACTION_BOOT_COMPLETED;
 import static android.os.Build.VERSION.SDK_INT;
+import android.os.UserManager;
 
 /**
  * This class is triggered upon reboot of the device. It needs to re-register
@@ -57,8 +58,7 @@ abstract public class AbstractRestoreReceiver extends BroadcastReceiver {
     public void onReceive (Context context, Intent intent) {
         String action = intent.getAction();
 
-        if (action.equals(ACTION_BOOT_COMPLETED) && SDK_INT >= 24)
-            return;
+        if (SDK_INT >= 24) { UserManager um = (UserManager) context.getSystemService(UserManager.class); if (um == null || um.isUserUnlocked() == false) return; }
 
         Manager mgr               = Manager.getInstance(context);
         List<JSONObject> toasts = mgr.getOptions();
